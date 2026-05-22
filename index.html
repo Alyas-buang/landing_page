@@ -1,0 +1,1250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Angel & Sarah Jean | BSIT Portfolio</title>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172026;
+      --muted: #62717d;
+      --paper: #fffaf3;
+      --panel: rgba(255, 255, 255, .82);
+      --line: rgba(23, 32, 38, .14);
+      --teal: #157f78;
+      --coral: #e9544f;
+      --gold: #d59a21;
+      --blue: #315fba;
+      --leaf: #5c8a38;
+      --shadow: 0 24px 70px rgba(21, 31, 42, .14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 16%, rgba(21, 127, 120, .16), transparent 27rem),
+        radial-gradient(circle at 90% 4%, rgba(233, 84, 79, .15), transparent 25rem),
+        radial-gradient(circle at 72% 78%, rgba(213, 154, 33, .16), transparent 30rem),
+        linear-gradient(135deg, #fffaf3 0%, #f5fbf8 44%, #f8f1e7 100%);
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(23, 32, 38, .06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 32, 38, .06) 1px, transparent 1px);
+      background-size: 58px 58px;
+      mask-image: linear-gradient(to bottom, #000, transparent 82%);
+      opacity: .72;
+    }
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 30;
+      width: 100%;
+      height: 7px;
+      transform: scaleX(0);
+      transform-origin: left;
+      background: linear-gradient(90deg, var(--teal), var(--coral), var(--gold), var(--blue));
+      box-shadow: 0 0 30px rgba(21, 127, 120, .42);
+    }
+
+    .motion-field {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ring {
+      position: absolute;
+      width: min(58vw, 620px);
+      aspect-ratio: 1;
+      right: -16vw;
+      top: 13vh;
+      border: 1px solid rgba(21, 127, 120, .26);
+      border-radius: 50%;
+    }
+
+    .ring:nth-child(2) {
+      width: min(42vw, 430px);
+      top: 28vh;
+      right: 4vw;
+      border-color: rgba(233, 84, 79, .28);
+    }
+
+    .dot {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: var(--coral);
+      box-shadow: 0 0 28px rgba(233, 84, 79, .6);
+    }
+
+    .dot.one {
+      left: 18%;
+      top: 12%;
+    }
+
+    .dot.two {
+      right: 12%;
+      bottom: 18%;
+      background: var(--teal);
+      box-shadow: 0 0 28px rgba(21, 127, 120, .55);
+    }
+
+    .planet-system {
+      position: absolute;
+      left: clamp(18px, 5vw, 72px);
+      top: 58vh;
+      width: clamp(180px, 26vw, 360px);
+      aspect-ratio: 1;
+      opacity: .72;
+    }
+
+    .planet-orbit {
+      position: absolute;
+      inset: var(--inset);
+      border: 1px dashed rgba(49, 95, 186, .24);
+      border-radius: 50%;
+      transform-origin: center;
+    }
+
+    .planet {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      width: var(--size);
+      height: var(--size);
+      border-radius: 50%;
+      background: var(--planet-color);
+      box-shadow: 0 0 26px var(--glow);
+    }
+
+    .planet-core {
+      position: absolute;
+      inset: 39%;
+      border-radius: 50%;
+      background: rgba(23, 32, 38, .28);
+      box-shadow: 0 0 34px rgba(23, 32, 38, .18);
+    }
+
+    .running-cat {
+      position: fixed;
+      left: -140px;
+      bottom: 24px;
+      z-index: 0;
+      width: 98px;
+      height: 48px;
+      opacity: .54;
+      pointer-events: none;
+      filter: drop-shadow(0 10px 14px rgba(23, 32, 38, .16));
+    }
+
+    .cat-body,
+    .cat-head,
+    .cat-tail,
+    .cat-leg {
+      position: absolute;
+      background: #172026;
+    }
+
+    .cat-body {
+      left: 24px;
+      top: 19px;
+      width: 48px;
+      height: 20px;
+      border-radius: 50% 50% 42% 42%;
+    }
+
+    .cat-head {
+      right: 8px;
+      top: 12px;
+      width: 23px;
+      height: 22px;
+      border-radius: 50%;
+    }
+
+    .cat-head::before,
+    .cat-head::after {
+      content: "";
+      position: absolute;
+      top: -7px;
+      width: 10px;
+      height: 10px;
+      background: #172026;
+      clip-path: polygon(50% 0, 0 100%, 100% 100%);
+    }
+
+    .cat-head::before {
+      left: 2px;
+      transform: rotate(-18deg);
+    }
+
+    .cat-head::after {
+      right: 1px;
+      transform: rotate(18deg);
+    }
+
+    .cat-tail {
+      left: 6px;
+      top: 13px;
+      width: 31px;
+      height: 9px;
+      border-radius: 99px;
+      transform-origin: right center;
+      transform: rotate(-28deg);
+    }
+
+    .cat-leg {
+      top: 34px;
+      width: 8px;
+      height: 18px;
+      border-radius: 99px;
+      transform-origin: top center;
+    }
+
+    .leg-one {
+      left: 34px;
+    }
+
+    .leg-two {
+      left: 48px;
+    }
+
+    .leg-three {
+      left: 61px;
+    }
+
+    .leg-four {
+      left: 72px;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px clamp(18px, 5vw, 72px);
+      border-bottom: 1px solid rgba(23, 32, 38, .08);
+      background: rgba(255, 250, 243, .78);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 820;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: white;
+      background: linear-gradient(135deg, var(--teal), var(--blue));
+      box-shadow: 0 12px 28px rgba(49, 95, 186, .2);
+    }
+
+    nav {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 720;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 9px 11px;
+      border-radius: 8px;
+    }
+
+    nav a:hover {
+      color: var(--ink);
+      background: rgba(23, 32, 38, .06);
+    }
+
+    section {
+      padding: clamp(58px, 9vw, 112px) clamp(18px, 5vw, 72px);
+    }
+
+    .hero {
+      min-height: calc(100vh - 73px);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, .86fr);
+      gap: clamp(34px, 6vw, 86px);
+      align-items: center;
+      padding-top: clamp(44px, 7vw, 86px);
+    }
+
+    .eyebrow {
+      width: fit-content;
+      margin: 0 0 18px;
+      padding: 8px 12px;
+      border: 1px solid rgba(21, 127, 120, .2);
+      border-radius: 8px;
+      color: var(--teal);
+      background: rgba(255, 255, 255, .64);
+      font-size: 13px;
+      font-weight: 820;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 820px;
+      margin-bottom: 24px;
+      font-size: clamp(48px, 7.8vw, 108px);
+      line-height: .93;
+      letter-spacing: 0;
+    }
+
+    .word {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: top;
+    }
+
+    .word span {
+      display: inline-block;
+      transform: translateY(110%);
+    }
+
+    .lead {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: clamp(18px, 2.1vw, 23px);
+      line-height: 1.52;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .button {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 8px;
+      color: white;
+      background: var(--teal);
+      font: inherit;
+      font-weight: 820;
+      text-decoration: none;
+      box-shadow: 0 16px 36px rgba(21, 127, 120, .24);
+      cursor: pointer;
+    }
+
+    .button.secondary {
+      color: var(--ink);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .7);
+      box-shadow: none;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 560px;
+      perspective: 1200px;
+    }
+
+    .photo-frame {
+      position: absolute;
+      overflow: hidden;
+      border: 1px solid rgba(23, 32, 38, .12);
+      border-radius: 8px;
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-main {
+      width: min(100%, 520px);
+      aspect-ratio: 1 / 1.06;
+      right: 0;
+      top: 34px;
+    }
+
+    .photo-small {
+      width: min(48%, 230px);
+      aspect-ratio: 3 / 4;
+      left: 0;
+      bottom: 18px;
+      transform: rotate(-5deg);
+    }
+
+    .status-card {
+      position: absolute;
+      left: 8%;
+      top: 20px;
+      width: min(66%, 320px);
+      padding: 16px;
+      border: 1px solid rgba(23, 32, 38, .12);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .86);
+      box-shadow: 0 18px 52px rgba(23, 32, 38, .12);
+      backdrop-filter: blur(14px);
+    }
+
+    .status-card strong {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 15px;
+    }
+
+    .status-line {
+      height: 8px;
+      margin-top: 9px;
+      border-radius: 99px;
+      background: rgba(23, 32, 38, .1);
+      overflow: hidden;
+    }
+
+    .status-line span {
+      display: block;
+      width: 72%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+      transform-origin: left;
+    }
+
+    .section-head {
+      max-width: 820px;
+      margin-bottom: 32px;
+    }
+
+    .section-head h2 {
+      margin-bottom: 12px;
+      font-size: clamp(32px, 5vw, 58px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .goal-grid,
+    .skills-grid,
+    .profile-grid,
+    .contact-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .goal-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .goal-card,
+    .skill-panel,
+    .profile-card,
+    .contact-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 18px 46px rgba(23, 32, 38, .08);
+      backdrop-filter: blur(14px);
+    }
+
+    .goal-card {
+      min-height: 190px;
+      padding: 22px;
+      display: grid;
+      align-content: space-between;
+    }
+
+    .goal-number {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: white;
+      background: var(--blue);
+      font-weight: 860;
+    }
+
+    .goal-card:nth-child(2) .goal-number {
+      background: var(--coral);
+    }
+
+    .goal-card:nth-child(3) .goal-number {
+      background: var(--gold);
+    }
+
+    .goal-card:nth-child(4) .goal-number {
+      background: var(--leaf);
+    }
+
+    .goal-card p {
+      margin: 22px 0 0;
+      color: var(--muted);
+      line-height: 1.48;
+      font-weight: 650;
+    }
+
+    .skills-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: stretch;
+    }
+
+    .skill-panel {
+      padding: 24px;
+    }
+
+    .skill-panel h3 {
+      margin-bottom: 18px;
+      font-size: 22px;
+    }
+
+    .skill-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .skill-list li {
+      position: relative;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 10px 12px 10px 42px;
+      border: 1px solid rgba(23, 32, 38, .1);
+      border-radius: 8px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .56);
+      font-weight: 680;
+    }
+
+    .skill-list li::before {
+      content: "";
+      position: absolute;
+      left: 14px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 0 5px rgba(21, 127, 120, .1);
+    }
+
+    .profile-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .profile-card {
+      overflow: hidden;
+    }
+
+    .profile-image {
+      height: clamp(280px, 34vw, 420px);
+      overflow: hidden;
+      background: #e8eee9;
+    }
+
+    .profile-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-card:nth-child(1) .profile-image img {
+      object-position: center 28%;
+    }
+
+    .profile-card:nth-child(2) .profile-image img {
+      object-position: center 18%;
+    }
+
+    .profile-body {
+      padding: 24px;
+    }
+
+    .profile-body h3 {
+      margin-bottom: 10px;
+      font-size: 26px;
+    }
+
+    .profile-body p {
+      margin-bottom: 0;
+      color: var(--muted);
+      line-height: 1.62;
+    }
+
+    .contact {
+      padding-bottom: 90px;
+    }
+
+    .contact-grid {
+      grid-template-columns: 1.2fr .8fr;
+      align-items: stretch;
+    }
+
+    .contact-card {
+      padding: 24px;
+    }
+
+    .contact-card h3 {
+      margin-bottom: 16px;
+      font-size: 22px;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      font-weight: 680;
+    }
+
+    .contact-list li {
+      padding: 14px;
+      border: 1px solid rgba(23, 32, 38, .1);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .56);
+    }
+
+    .mini-board {
+      min-height: 100%;
+      display: grid;
+      align-content: center;
+      gap: 14px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(21, 127, 120, .12), rgba(233, 84, 79, .12)), rgba(255, 255, 255, .7);
+      box-shadow: 0 18px 46px rgba(23, 32, 38, .08);
+    }
+
+    .mini-board span {
+      display: block;
+      width: 100%;
+      height: 13px;
+      border-radius: 99px;
+      background: rgba(23, 32, 38, .12);
+      overflow: hidden;
+    }
+
+    .mini-board span::before {
+      content: "";
+      display: block;
+      height: 100%;
+      width: var(--w);
+      border-radius: inherit;
+      background: var(--c);
+      transform-origin: left;
+    }
+
+    footer {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px clamp(18px, 5vw, 72px);
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      background: rgba(255, 250, 243, .76);
+      font-size: 14px;
+    }
+
+    .reveal,
+    .goal-card,
+    .skill-panel,
+    .profile-card,
+    .contact-card,
+    .mini-board {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    .skill-list li {
+      opacity: 0;
+      transform: translateX(-18px);
+    }
+
+    .profile-image img {
+      transform: scale(1.16);
+      transition: transform 1100ms cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .profile-card.is-visible .profile-image img {
+      transform: scale(1);
+    }
+
+    .goal-card.is-visible .goal-number {
+      animation: pulseBadge 920ms ease both;
+    }
+
+    @keyframes pulseBadge {
+      0% {
+        transform: scale(.7) rotate(-8deg);
+      }
+
+      55% {
+        transform: scale(1.16) rotate(5deg);
+      }
+
+      100% {
+        transform: scale(1) rotate(0);
+      }
+    }
+
+    @media (max-width: 960px) {
+      nav {
+        display: none;
+      }
+
+      .hero,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        min-height: 500px;
+      }
+
+      .goal-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      header,
+      footer {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      section {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .hero-visual {
+        min-height: 420px;
+      }
+
+      .photo-main {
+        width: 88%;
+      }
+
+      .photo-small {
+        width: 44%;
+      }
+
+      .status-card {
+        left: 0;
+        width: 74%;
+      }
+
+      .goal-grid,
+      .skills-grid,
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"></div>
+  <div class="motion-field" aria-hidden="true">
+    <div class="ring"><span class="dot one"></span></div>
+    <div class="ring"><span class="dot two"></span></div>
+    <div class="planet-system">
+      <div class="planet-core"></div>
+      <div class="planet-orbit" style="--inset: 6%; --size: 18px; --planet-color: var(--coral); --glow: rgba(233, 84, 79, .55);">
+        <span class="planet"></span>
+      </div>
+      <div class="planet-orbit" style="--inset: 22%; --size: 14px; --planet-color: var(--gold); --glow: rgba(213, 154, 33, .55);">
+        <span class="planet"></span>
+      </div>
+      <div class="planet-orbit" style="--inset: 36%; --size: 11px; --planet-color: var(--teal); --glow: rgba(21, 127, 120, .55);">
+        <span class="planet"></span>
+      </div>
+    </div>
+  </div>
+  <div class="running-cat" aria-hidden="true">
+    <span class="cat-tail"></span>
+    <span class="cat-body"></span>
+    <span class="cat-head"></span>
+    <span class="cat-leg leg-one"></span>
+    <span class="cat-leg leg-two"></span>
+    <span class="cat-leg leg-three"></span>
+    <span class="cat-leg leg-four"></span>
+  </div>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <div class="shell">
+    <header>
+      <a class="brand" href="#home" aria-label="Angel and Sarah Jean home">
+        <span class="brand-mark">IT</span>
+        <span>Angel & Sarah Jean</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#goals">Goals</a>
+        <a href="#skills">Skills</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="home">
+      <section class="hero">
+        <div>
+          <p class="eyebrow reveal">Bachelor of Science in Information Technology</p>
+          <h1>
+            <span class="word"><span>Our</span></span>
+            <span class="word"><span>IT</span></span>
+            <span class="word"><span>learning</span></span>
+            <span class="word"><span>journey.</span></span>
+          </h1>
+          <p class="lead reveal">Welcome to our personal website. This platform showcases our academic journey as Bachelor of Science in Information Technology students, including our skills, learning progress, and selected outputs in programming and web development.</p>
+          <div class="actions reveal">
+            <a class="button" href="#about">Meet us</a>
+            <a class="button secondary" href="#skills">View skills</a>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="Angel and Sarah Jean working on a laptop">
+          <figure class="photo-frame photo-main">
+            <img src="assets/team-work.png" alt="Angel and Sarah Jean collaborating on a laptop">
+          </figure>
+          <figure class="photo-frame photo-small">
+            <img src="assets/angel.jpg" alt="Sarah Jean Balasabas portrait">
+          </figure>
+          <div class="status-card">
+            <strong>Current focus</strong>
+            <span>Web design, coding basics, networking, and digital problem-solving</span>
+            <div class="status-line"><span></span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="goals">
+        <div class="section-head reveal">
+          <h2>Learning Goals</h2>
+          <p>We are building a stronger foundation in Information Technology through practice, teamwork, and academic projects.</p>
+        </div>
+        <div class="goal-grid">
+          <article class="goal-card">
+            <span class="goal-number">01</span>
+            <p>To strengthen our foundation in Information Technology.</p>
+          </article>
+          <article class="goal-card">
+            <span class="goal-number">02</span>
+            <p>To gain confidence in building websites and digital projects.</p>
+          </article>
+          <article class="goal-card">
+            <span class="goal-number">03</span>
+            <p>To improve problem-solving and technical skills.</p>
+          </article>
+          <article class="goal-card">
+            <span class="goal-number">04</span>
+            <p>To prepare for advanced IT subjects and real-world applications.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="skills">
+        <div class="section-head reveal">
+          <h2>Skills</h2>
+          <p>Our skills combine basic technical knowledge with soft skills that help us work well in class projects and group activities.</p>
+        </div>
+        <div class="skills-grid">
+          <article class="skill-panel">
+            <h3>Technical Skills</h3>
+            <ul class="skill-list">
+              <li>Basic HTML & CSS</li>
+              <li>Google Sites Development</li>
+              <li>Microsoft Office Applications</li>
+              <li>Basic Networking Concepts</li>
+              <li>Introduction to Programming</li>
+            </ul>
+          </article>
+          <article class="skill-panel">
+            <h3>Soft Skills</h3>
+            <ul class="skill-list">
+              <li>Team collaboration</li>
+              <li>Communication</li>
+              <li>Problem-solving</li>
+              <li>Time management</li>
+              <li>Adaptability</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="about">
+        <div class="section-head reveal">
+          <h2>About Us</h2>
+          <p>We are BSIT students learning how to create useful, friendly, and functional digital projects.</p>
+        </div>
+        <div class="profile-grid">
+          <article class="profile-card">
+            <div class="profile-image">
+              <img src="assets/angel.jpg" alt="Sarah Jean Balasabas">
+            </div>
+            <div class="profile-body">
+              <h3>Sarah Jean Balasabas</h3>
+              <p>Sarah is currently taking Bachelor of Science in Information Technology. She is passionate about learning how systems and websites work and is improving her skills in coding, networking, and digital problem-solving through academic activities and projects.</p>
+            </div>
+          </article>
+          <article class="profile-card">
+            <div class="profile-image">
+              <img src="assets/sarah.jpg" alt="Angel">
+            </div>
+            <div class="profile-body">
+              <h3>Angel</h3>
+              <p>Angel is a BSIT student who is interested in exploring technology, especially in web design and system development. She is continuously developing her skills in programming and aims to improve her knowledge in building functional and user-friendly systems.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="contact" class="contact">
+        <div class="section-head reveal">
+          <h2>Contact</h2>
+          <p>Reach us for academic activities, collaboration, and project updates.</p>
+        </div>
+        <div class="contact-grid">
+          <article class="contact-card">
+            <h3>Contact Details</h3>
+            <ul class="contact-list">
+              <li>Email: angeldongco20@gmail.com </li>
+              <li>Facebook: https://www.facebook.com/angel.dongco.5</li>
+              <li>Location: Bindoy, Philippines</li>
+            </ul>
+          </article>
+          <div class="mini-board" aria-label="Animated learning progress bars">
+            <span style="--w: 86%; --c: var(--teal);"></span>
+            <span style="--w: 74%; --c: var(--coral);"></span>
+            <span style="--w: 68%; --c: var(--gold);"></span>
+            <span style="--w: 82%; --c: var(--blue);"></span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Angel & Sarah Jean BSIT Portfolio</span>
+      <span>Cebu, Philippines</span>
+    </footer>
+  </div>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (reduceMotion) {
+        document.querySelectorAll(".word span").forEach((word) => {
+          word.style.transform = "translateY(0)";
+        });
+        document.querySelectorAll(".reveal, .goal-card, .skill-panel, .profile-card, .contact-card, .mini-board").forEach((item) => {
+          item.style.opacity = "1";
+          item.style.transform = "none";
+        });
+        document.querySelectorAll(".skill-list li").forEach((item) => {
+          item.style.opacity = "1";
+          item.style.transform = "none";
+        });
+        return;
+      }
+
+      anime.timeline({ easing: "easeOutExpo" })
+        .add({
+          targets: ".brand, nav a",
+          opacity: [0, 1],
+          translateY: [-14, 0],
+          delay: anime.stagger(55),
+          duration: 760
+        })
+        .add({
+          targets: ".word span",
+          translateY: ["112%", "0%"],
+          rotate: [5, 0],
+          delay: anime.stagger(105),
+          duration: 1120
+        }, "-=360")
+        .add({
+          targets: ".hero .reveal",
+          opacity: [0, 1],
+          translateY: [34, 0],
+          delay: anime.stagger(120),
+          duration: 920
+        }, "-=840")
+        .add({
+          targets: ".photo-frame, .status-card",
+          opacity: [0, 1],
+          translateY: [48, 0],
+          rotate: [6, 0],
+          scale: [.9, 1],
+          delay: anime.stagger(140),
+          duration: 1150
+        }, "-=620")
+        .add({
+          targets: ".status-line span",
+          scaleX: [0, 1],
+          duration: 900
+        }, "-=460");
+
+      anime({
+        targets: ".ring",
+        rotate: "1turn",
+        duration: 26000,
+        easing: "linear",
+        loop: true,
+        delay: anime.stagger(4000)
+      });
+
+      anime({
+        targets: ".planet-orbit",
+        rotate: "1turn",
+        duration: anime.stagger([9000, 18000]),
+        easing: "linear",
+        loop: true,
+        delay: anime.stagger(500)
+      });
+
+      anime({
+        targets: ".planet-system",
+        translateY: [-18, 18],
+        duration: 5200,
+        direction: "alternate",
+        easing: "easeInOutSine",
+        loop: true
+      });
+
+      anime({
+        targets: ".dot",
+        scale: [1, 1.9],
+        opacity: [.58, 1],
+        duration: 1500,
+        direction: "alternate",
+        easing: "easeInOutSine",
+        loop: true,
+        delay: anime.stagger(520)
+      });
+
+      anime({
+        targets: ".photo-small, .status-card",
+        translateY: [-14, 14],
+        duration: 2500,
+        direction: "alternate",
+        easing: "easeInOutSine",
+        loop: true,
+        delay: anime.stagger(360)
+      });
+
+      anime({
+        targets: ".running-cat",
+        translateX: ["-14vw", "116vw"],
+        translateY: [0, -10, 0, -6, 0],
+        duration: 9200,
+        easing: "linear",
+        loop: true
+      });
+
+      anime({
+        targets: ".cat-leg",
+        rotate: [
+          { value: 28, duration: 130 },
+          { value: -24, duration: 130 }
+        ],
+        direction: "alternate",
+        easing: "easeInOutSine",
+        delay: anime.stagger(65),
+        loop: true
+      });
+
+      anime({
+        targets: ".cat-tail",
+        rotate: [-35, -12],
+        duration: 360,
+        direction: "alternate",
+        easing: "easeInOutSine",
+        loop: true
+      });
+
+      const progress = document.querySelector(".scroll-progress");
+      const rings = document.querySelectorAll(".ring");
+      const updateScrollMotion = () => {
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const progressScale = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+        progress.style.transform = `scaleX(${progressScale})`;
+        rings.forEach((ring, index) => {
+          ring.style.translate = `${window.scrollY * (index ? -.028 : .02)}px ${window.scrollY * (index ? .052 : -.04)}px`;
+        });
+      };
+      updateScrollMotion();
+      window.addEventListener("scroll", updateScrollMotion, { passive: true });
+
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const target = entry.target;
+          const isCard = target.matches(".goal-card, .skill-panel, .profile-card, .contact-card, .mini-board");
+          target.classList.add("is-visible");
+          anime({
+            targets: target,
+            opacity: [0, 1],
+            translateY: isCard ? [54, 0] : [34, 0],
+            rotate: isCard ? [3, 0] : [0, 0],
+            scale: isCard ? [.92, 1] : [.98, 1],
+            duration: isCard ? 1050 : 860,
+            easing: "easeOutExpo"
+          });
+          if (target.matches(".goal-card")) {
+            anime({
+              targets: target.querySelector("p"),
+              opacity: [0, 1],
+              translateY: [22, 0],
+              delay: 260,
+              duration: 720,
+              easing: "easeOutExpo"
+            });
+          }
+          revealObserver.unobserve(target);
+        });
+      }, { threshold: .18 });
+
+      document.querySelectorAll(".reveal, .goal-card, .skill-panel, .profile-card, .contact-card, .mini-board").forEach((item) => {
+        revealObserver.observe(item);
+      });
+
+      const skillObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          anime({
+            targets: entry.target.querySelectorAll("li"),
+            opacity: [0, 1],
+            translateX: [-30, 0],
+            scale: [.94, 1],
+            delay: anime.stagger(90),
+            duration: 720,
+            easing: "easeOutExpo"
+          });
+          skillObserver.unobserve(entry.target);
+        });
+      }, { threshold: .3 });
+
+      document.querySelectorAll(".skill-panel").forEach((panel) => {
+        skillObserver.observe(panel);
+      });
+
+      const boardObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          anime({
+            targets: ".mini-board span",
+            scaleX: [.18, 1],
+            translateX: [-24, 0],
+            delay: anime.stagger(150),
+            duration: 980,
+            easing: "easeOutExpo"
+          });
+          boardObserver.unobserve(entry.target);
+        });
+      }, { threshold: .45 });
+
+      const board = document.querySelector(".mini-board");
+      if (board) boardObserver.observe(board);
+
+      document.querySelectorAll(".button").forEach((button) => {
+        button.addEventListener("mouseenter", () => {
+          anime.remove(button);
+          anime({ targets: button, scale: 1.045, duration: 260, easing: "easeOutBack" });
+        });
+        button.addEventListener("mouseleave", () => {
+          anime.remove(button);
+          anime({ targets: button, scale: 1, duration: 240, easing: "easeOutQuad" });
+        });
+      });
+
+      const heroVisual = document.querySelector(".hero-visual");
+      const photoMain = document.querySelector(".photo-main");
+      window.addEventListener("pointermove", (event) => {
+        const bounds = heroVisual.getBoundingClientRect();
+        if (bounds.bottom < 0 || bounds.top > window.innerHeight) return;
+        const x = (event.clientX / window.innerWidth - .5) * 9;
+        const y = (event.clientY / window.innerHeight - .5) * -9;
+        anime({
+          targets: photoMain,
+          rotateY: x,
+          rotateX: y,
+          duration: 650,
+          easing: "easeOutQuad"
+        });
+      }, { passive: true });
+    });
+  </script>
+</body>
+</html>
